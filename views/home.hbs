@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>How long ago was this film released?</title>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        {{!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> --}}
+    
+    </head>
+    <body>
+        <h1>{{title}}</h1>
+        <div>
+            <h2>At the box office</h2>
+            <p>{{date.how_long_ago_output}}</p>
+            <p>Released {{date.release_output}}</p>
+            <img src="{{img_path.backdrop}}" alt="back drop image" />
+            <img src="{{img_path.poster}}" alt="poster image" />
+        </div>
+    </body>
+</html>
