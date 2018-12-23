@@ -18,12 +18,22 @@ app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
 
+    //TODO: PASS IN FROM URL / USER INPUT / CMD LINE
     movies.getMovie('fight club', (skv_movie) => {
-
+console.log(skv_movie);
         // TODO: error handling
-        //use a handlebars template page and pass in 
-        //a struct of data
-        res.render('home.hbs', skv_movie.data);
+        if(!skv_movie.success) {
+            //use a handlebars template page and pass in 
+            //a struct of data
+            res.render('error.hbs', skv_movie);            
+        } else {
+
+            //use a handlebars template page and pass in 
+            //a struct of data
+            res.render('home.hbs', skv_movie.data);
+        }
+
+
 
     });
 
