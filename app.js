@@ -2,7 +2,7 @@ const express = require('express');
 //handlebars templating engine
 const hbs = require('hbs');
 
-const movies = require('./api/movies');
+const retrieve = require('./api/retrieve');
 
 //process has all our environment variables set as key value pairs
 //heroku will set process.env.PORT otherwise we'll just use 3000 like localhost:3000 
@@ -19,7 +19,7 @@ app.set('view engine', 'hbs');
 app.get('/', (req, res) => {
 
     //TODO: PASS IN FROM URL / USER INPUT / CMD LINE
-    movies.getMovie('fight club', (skv_movie) => {
+    retrieve.getAll('fight club', (skv_movie) => {
 console.log(skv_movie);
         // TODO: error handling
         if(!skv_movie.success) {
