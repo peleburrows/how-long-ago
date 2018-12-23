@@ -39,8 +39,6 @@ var getAll = (str_search, callback) => {
 
     //in order to get images we need to get call the movie db api to get configuration values
     //e.g sizes available, paths to use etc
-
-
     axios.get(movie_db_img_cfg_url)
         .then( (response) => {
 
@@ -63,6 +61,7 @@ var getAll = (str_search, callback) => {
             skv_return.data = response.data;
             return people.getPeople({
                                 film_id : skv_return.data.id,
+                                ms_since_release: skv_return.data.how_many_ms_ago,
                                 api_cfg : api_cfg
                             });
 

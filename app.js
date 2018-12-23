@@ -20,7 +20,9 @@ app.get('/', (req, res) => {
 
     //TODO: PASS IN FROM URL / USER INPUT / CMD LINE
     retrieve.getAll('fight club', (skv_movie) => {
-console.log(skv_movie);
+
+    // console.log(JSON.stringify(skv_movie, undefined, 2));
+
         // TODO: error handling
         if(!skv_movie.success) {
             //use a handlebars template page and pass in 

@@ -30,17 +30,11 @@ var getFormattedDateOutput = (str_date) => {
  * @param str_date in 'yyyy-dd-mmm' format 
  * @return diff_days the number of days difference between 2 dates
  */
-var getHowManyMSago = (str_date_to_check) => {
+var getDifferenceMSBetween2Dates = (objDate1, objDate2) => {
     
     // the milliseconds in a single day
     // hours*minutes*seconds*milliseconds
     // var one_day = 24*60*60*1000; 
-
-    //get date of the date to check
-    var objCheckDate = new Date(str_date_to_check);
-    
-    //current date
-    var objNowDate = new Date();
 
     // 1. calculate the time difference the date and 1970/01/01
     // 2. find the difference in time
@@ -48,9 +42,9 @@ var getHowManyMSago = (str_date_to_check) => {
     // 4. round up 
     // var diff_days = Math.round(Math.abs((objNowDate.getTime() - objCheckDate.getTime())/(one_day)));
     
-    var diff_ms = Math.abs(objNowDate.getTime() - objCheckDate.getTime());
-    
-    return diff_ms;
+    var diff_ms = Math.abs(objDate1.getTime() - objDate2.getTime());
+console.log('diff_ms: ' + diff_ms);
+    return getFormattedMSoutput(diff_ms);
 
 };
 
@@ -74,15 +68,22 @@ var getFormattedMSoutput = (num_ms) => {
     var casio = remainder % y2;
     year = (total_num_days - remainder) / y;
     month = (remainder - casio) / y2;
-    
-    var result = `${year} years ${month} months ${casio} days ago`;
 
-    return result;
+    var skv_return = {
+        split: {
+            years: year,
+            months : month,
+            days : casio
+        },
+        text: `${year} years ${month} months ${casio} days`
+    };
+console.log('skv_return: ', skv_return);
+    return skv_return;
 
 };
 
 module.exports = {
     getFormattedDateOutput,
-    getHowManyMSago,
+    getDifferenceMSBetween2Dates,
     getFormattedMSoutput
 };

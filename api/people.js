@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+const dates = require('./dates');
+
 var skv_return = {
     success: false,
     msg: 'fail',
@@ -36,6 +38,23 @@ var getPeople = (skv_data) => {
 
                                         //update the current arr_cast with data from the extra detail call
                                         arr_cast[index].birthday = response.data.birthday;
+
+                                        var objNowDate = new Date();
+                                        var objBirthdayDate = new Date(arr_cast[index].birthday);
+console.log(index);
+console.log(objNowDate.getTime());
+console.log(objBirthdayDate.getTime());
+                                        arr_cast[index].age = {
+                                            get now () {
+                                                var age_ms = dates.getDifferenceMSBetween2Dates(objNowDate, objBirthdayDate);
+                                                return dates.getFormattedMSoutput(objNowDate, objBirthdayDate);
+                                            },
+                                            get at_release () {
+                                                //call the getter to format the date in to human readable text
+                                                return dates.getFormattedDateOutput(this.release);
+                                            }
+                                            
+                                        };
 
                                         index++;
 

@@ -12,10 +12,17 @@
         <h1>{{title}}</h1>
         <div>
             <h2>At the box office</h2>
-            <p>{{date.how_long_ago_output}}</p>
+            <p>{{date.how_long_ago.text}}</p>
             <p>Released {{date.release_output}}</p>
             <img src="{{img_path.backdrop}}" alt="back drop image" />
             <img src="{{img_path.poster}}" alt="poster image" />
+        </div>
+        <div>
+            <h2>Cast</h2>
+            {{#each people}}
+            <p>{{name}}</p>
+            <p>{{age.now.text}}</p>
+            {{/each}}
         </div>
     </body>
 </html>

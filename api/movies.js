@@ -45,11 +45,10 @@ var getMovie = (skv_cfg) => {
                         //call the getter to format the date in to human readable text
                         return dates.getFormattedDateOutput(this.release);
                     },
-                    get how_many_ms_ago () {
-                        return dates.getHowManyMSago(this.release);
-                    },
-                    get how_long_ago_output () {
-                        return dates.getFormattedMSoutput(this.how_many_ms_ago);
+                    get how_long_ago () {
+                        //get the current date and the date of the release
+                        //find the difference in ms
+                        return dates.getDifferenceMSBetween2Dates(new Date(), new Date(this.release));
                     }
                 }
             
