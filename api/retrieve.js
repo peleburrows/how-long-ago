@@ -9,9 +9,7 @@ const movie_db_base_path = 'https://api.themoviedb.org/3';
 
 const api_cfg = {
     paths : {
-        base    : movie_db_base_path,
-        search  : `${movie_db_base_path}/search`,
-        config  : `${movie_db_base_path}/configuration`
+        base    : movie_db_base_path
     },
     key : 'f8c246237ba20222ad158986811e574f'
 };
@@ -33,9 +31,9 @@ var getAll = (cfg, callback) => {
         data: {}
     };
 
-
+    //TODO : need to acknolwdge moviedb
     //path to call the API to get configuration available for images
-    var movie_db_img_cfg_url = `${api_cfg.paths.config}?api_key=${api_cfg.key}`;
+    var movie_db_img_cfg_url = `${api_cfg.paths.base}/configuration?api_key=${api_cfg.key}`;
 
     //in order to get images we need to get call the movie db api to get configuration values
     //e.g sizes available, paths to use etc
@@ -60,7 +58,6 @@ var getAll = (cfg, callback) => {
         .then( (response) => {
 
             skv_return.data = response.data;
-
             return people.getPeople({
                                 film_id : skv_return.data.id,
                                 release_dates: skv_return.data.region.release_dates,

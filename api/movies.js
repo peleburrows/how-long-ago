@@ -3,6 +3,10 @@ const axios = require('axios');
 //date formatting, millisecond conversion
 const dates = require('./dates');
 
+//for getting inflation for selected country
+const finance = require('./finance');
+
+
 /**
  * Search movie db with search title
  * @param str_search Not encoded search input from the user 
@@ -23,7 +27,7 @@ var getMovie = (skv_cfg) => {
     var str_encoded_search = skv_cfg.search_terms;
 
     //path to call the API to get movie detail
-    var movie_db_url = `${api_cfg.paths.search}/movie?api_key=${api_cfg.key}&query=${str_encoded_search}`;
+    var movie_db_url = `${api_cfg.paths.base}/search/movie?api_key=${api_cfg.key}&query=${str_encoded_search}`;
 
     //get the movie details
     return axios.get(movie_db_url)
@@ -43,37 +47,83 @@ var getMovie = (skv_cfg) => {
             
             };
 
-            //find when movies were released based on region and type of release (theatrical, home etc)
-            var movie_release_dates_url = `${api_cfg.paths.base}/movie/${skv_return.data.id}/release_dates?api_key=${api_cfg.key}`;
+            //now we have the movie id get extra movie details
+            var movie_details_url = `${api_cfg.paths.base}/movie/${skv_return.data.id}?api_key=${api_cfg.key}`;
+            //themoviedb allows merging responses to reduce api calls
+            //attach to the returned json released dates based on region and type of release (theatrical, home etc)
+            movie_details_url += '&append_to_response=release_dates';
 
-            return axios.get(movie_release_dates_url)
+            return axios.get(movie_details_url)
 
         }).then( (response) => {
 
-            var arr_regions = response.data.results;
+            //store regions to be used later
+            var arr_regions = response.data.release_dates.results;
 
-            //get just the release date info from the specified region code
-            var skv_region = arr_regions.filter( (skv_region) => {
-                return skv_region.iso_3166_1 === skv_cfg.region_code;
-            })[0];
+            //-------------- FINANCE WITHOUT INFLATION --------------
+            skv_return.data.finance = {
+                no_inflation : {
+                    budget: response.data.budget,
+                    revenue: response.data.revenue,
+                    get gross () {
+                        return this.revenue - this.budget;
+                    },
+                },
+                //the date that these finance details are based on (probably the US theatrical release date)
+                release_date: response.data.release_date 
+            };
 
-            //loop through each region and find the correct region based on passed in region code
-            skv_region.release_dates.forEach( (skv_release_date, idx) => {
+            //get the inflation rate for US and the selected country
+            return finance.getInflationRate({
+                    region_code: skv_cfg.region_code,
+                    from_date: response.data.release_date
+                }
 
-                //for each type of release work out how long ago it was and include formatting
-                skv_region.release_dates[idx] = applyElapsedTimes(skv_region.release_dates[idx]);
+            //handle the data come back from inflation rates promise/api call
+            ).then( (response) => {
 
-            });       
+                var num_rate_percentage = Number(response.data);
 
-            skv_return.data.region = skv_region;
+                //-------------- US FINANCE WITH INFLATION --------------
+                var rate_factor = (num_rate_percentage + 100) / 100;
 
-            skv_return.success = true;
-            skv_return.msg = 'success';
+                //apply inflation to our existing financials
+                var inc_inflation = {
+                    percentage: num_rate_percentage,
+                    budget : Math.round(skv_return.data.finance.no_inflation.budget * rate_factor),
+                    revenue: Math.round(skv_return.data.finance.no_inflation.revenue * rate_factor),
+                    get gross () {
+                        return this.revenue - this.budget;
+                    },
+                };
+  
+                skv_return.data.finance.inc_inflation = inc_inflation;
 
-            return skv_return;
 
-        })
-        .catch( (e) => {
+                //------- RELEASE DATES------------
+               
+                //get just the release date info from the specified region code
+                var skv_region = arr_regions.filter( (skv_region) => {
+                    return skv_region.iso_3166_1 === skv_cfg.region_code;
+                })[0];
+    
+                //loop through each region and find the correct region based on passed in region code
+                skv_region.release_dates.forEach( (skv_release_date, idx) => {
+    
+                    //for each type of release work out how long ago it was and include formatting
+                    skv_region.release_dates[idx] = applyElapsedTimes(skv_region.release_dates[idx]);
+    
+                });       
+    
+                skv_return.data.region = skv_region;
+                
+                skv_return.success = true;
+                skv_return.msg = 'success';
+    
+                return skv_return;
+            });
+
+        }).catch( (e) => {
             
             var err_msg = '';
 
