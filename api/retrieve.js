@@ -24,7 +24,7 @@ var skv_img_cfg = {};
  * Search movie db with search title
  * @param str_search Not encoded search input from the user 
  */
-var getAll = (str_search, callback) => {
+var getAll = (cfg, callback) => {
 
     //the struct that will eventually be returned from calling this method
     var skv_return = {
@@ -46,7 +46,8 @@ var getAll = (str_search, callback) => {
             skv_img_cfg = response.data;
 
             var skv_movie_cfg = {
-                search : str_search,
+                search_terms : cfg.search_terms,
+                region_code: cfg.region_code,
                 skv_img_cfg,
                 api_cfg
             };
@@ -59,9 +60,10 @@ var getAll = (str_search, callback) => {
         .then( (response) => {
 
             skv_return.data = response.data;
+
             return people.getPeople({
                                 film_id : skv_return.data.id,
-                                ms_since_release: skv_return.data.how_many_ms_ago,
+                                release_dates: skv_return.data.region.release_dates,
                                 api_cfg : api_cfg
                             });
 

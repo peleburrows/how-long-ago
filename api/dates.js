@@ -43,8 +43,8 @@ var getDifferenceMSBetween2Dates = (objDate1, objDate2) => {
     // var diff_days = Math.round(Math.abs((objNowDate.getTime() - objCheckDate.getTime())/(one_day)));
     
     var diff_ms = Math.abs(objDate1.getTime() - objDate2.getTime());
-console.log('diff_ms: ' + diff_ms);
-    return getFormattedMSoutput(diff_ms);
+
+    return diff_ms;
 
 };
 
@@ -75,9 +75,10 @@ var getFormattedMSoutput = (num_ms) => {
             months : month,
             days : casio
         },
-        text: `${year} years ${month} months ${casio} days`
+        text: `${year} years ${month} months ${casio} days`,
+        ms: num_ms
     };
-console.log('skv_return: ', skv_return);
+    
     return skv_return;
 
 };

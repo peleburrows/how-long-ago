@@ -18,21 +18,28 @@ app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
 
+    var cfg = {
+        search_terms: 'fight club',
+        region_code: 'IT' //US
+    };
+
     //TODO: PASS IN FROM URL / USER INPUT / CMD LINE
-    retrieve.getAll('fight club', (skv_movie) => {
+    retrieve.getAll(cfg, (skv_movie) => {
 
     // console.log(JSON.stringify(skv_movie, undefined, 2));
+
+        res.send(skv_movie);
 
         // TODO: error handling
         if(!skv_movie.success) {
             //use a handlebars template page and pass in 
             //a struct of data
-            res.render('error.hbs', skv_movie);            
+            // res.render('error.hbs', skv_movie);            
         } else {
 
             //use a handlebars template page and pass in 
             //a struct of data
-            res.render('home.hbs', skv_movie.data);
+            // res.render('home.hbs', skv_movie.data);
         }
 
 

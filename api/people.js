@@ -26,55 +26,15 @@ var getPeople = (skv_data) => {
 
                     var index = 0;
 
-                    //recursive function getting cast details that aren't in the previous film credits call
-                    function getCastExtraDetail() {
-
-                        //create a path using the id for each cast member
-                        var cast_detail_url = `${api_cfg.paths.base}/person/${arr_cast[index].id}?api_key=${api_cfg.key}`;
-
-                        //promised ajax call to get an individual person
-                        return axios.get(cast_detail_url)
-                                    .then((response) => {
-
-                                        //update the current arr_cast with data from the extra detail call
-                                        arr_cast[index].birthday = response.data.birthday;
-
-                                        var objNowDate = new Date();
-                                        var objBirthdayDate = new Date(arr_cast[index].birthday);
-console.log(index);
-console.log(objNowDate.getTime());
-console.log(objBirthdayDate.getTime());
-                                        arr_cast[index].age = {
-                                            get now () {
-                                                var age_ms = dates.getDifferenceMSBetween2Dates(objNowDate, objBirthdayDate);
-                                                return dates.getFormattedMSoutput(objNowDate, objBirthdayDate);
-                                            },
-                                            get at_release () {
-                                                //call the getter to format the date in to human readable text
-                                                return dates.getFormattedDateOutput(this.release);
-                                            }
-                                            
-                                        };
-
-                                        index++;
-
-                                        //if we're at the end of the array of cast members
-                                        //finish recursing...
-                                        if (index >= arr_cast.length) {
-                                            return arr_cast;
-                                        }
-
-                                        //...otherwise do another call to get the next cast member
-                                        return getCastExtraDetail();
-                                    });
-                
-                    }
-
                     //start going through the cast members getting further details of them
-                    return getCastExtraDetail();                  
+                    return getCastExtraDetail(  skv_data.release_dates,
+                                                api_cfg,
+                                                arr_cast, 
+                                                0
+                                            );                  
 
-                }).
-                then((response) => {
+                })
+                .then((response) => {
 
                     skv_return.success = true,
                     skv_return.msg = 'success',
@@ -83,6 +43,74 @@ console.log(objBirthdayDate.getTime());
                     return skv_return;
                 });
 };
+
+
+
+//recursive function getting cast details that aren't in the previous film credits call
+function getCastExtraDetail(    release_dates,
+                                api_cfg,
+                                arr_cast, 
+                                index
+                            ) {
+
+    //create a path using the id for each cast member
+    var cast_detail_url = `${api_cfg.paths.base}/person/${arr_cast[index].id}?api_key=${api_cfg.key}`;
+
+    //promised ajax call to get an individual person
+    return axios.get(cast_detail_url)
+                .then((response) => {
+
+                    //update the current arr_cast with data from the extra detail call
+                    arr_cast[index].birthday = response.data.birthday;
+
+                    var objNowDate = new Date();
+                    var objBirthdayDate = new Date(arr_cast[index].birthday);
+
+                    arr_cast[index].age = {
+                        get now () {
+                            var age_ms = dates.getDifferenceMSBetween2Dates(objNowDate, objBirthdayDate);
+                            return dates.getFormattedMSoutput(age_ms);
+                        }                        
+                    };
+
+                    var age_at_releases = [];
+
+                    //for each release date (premiere, theatrical, dvd etc)
+                    //find what age they were
+                    release_dates.forEach( (release_date, idx) => {
+
+                        //at time of release
+                        var age_ms = arr_cast[index].age.now.ms - release_date.how_long_ago;  
+
+                        //store a break down of the age at the time of the film
+                        age_at_releases.push(dates.getFormattedMSoutput(age_ms));
+                    
+                    });
+
+                    //apply to the arr_cast
+                    arr_cast[index].at_releases = age_at_releases;
+
+                    //move the pointer on to the next cast member
+                    index++;
+
+                    //if we're at the end of the array of cast members
+                    //finish recursing...
+                    if (index >= arr_cast.length) {
+                        return arr_cast;
+                    }
+
+                    //...otherwise do another call to get the next cast member
+                    return getCastExtraDetail(  release_dates,
+                                                api_cfg,
+                                                arr_cast,
+                                                index
+                                            );
+                });
+
+}
+
+
+
 
 //allow functions to be called from when this module is imported elsewhere
 module.exports = {
