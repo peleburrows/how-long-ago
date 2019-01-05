@@ -72,10 +72,10 @@ var getMovie = (skv_cfg) => {
                 // the date that these finance details are based on (probably the US theatrical release date)
                 release_date: response.data.release_date 
             };
-
-            return finance.getTicketPrices();
-
-        }).then( (response) => {
+// console.log('here in movies');
+//             return finance.getTicketPrices();
+// return true;
+        // }).then( (response) => {
 
             // get the inflation rate for US and the selected country
             return finance.getInflationRate({
@@ -86,46 +86,45 @@ var getMovie = (skv_cfg) => {
         }).then( (response) => {
             // handle the data come back from inflation rates promise/api call
 
-                var num_rate_percentage = Number(response.data);
+            var num_rate_percentage = Number(response.data);
 
-                // -------------- US FINANCE WITH INFLATION --------------
-                var rate_factor = (num_rate_percentage + 100) / 100;
+            // -------------- US FINANCE WITH INFLATION --------------
+            var rate_factor = (num_rate_percentage + 100) / 100;
 
-                // apply inflation to our existing financials
-                var inc_inflation = {
-                    percentage: num_rate_percentage,
-                    budget : Math.round(skv_return.data.finance.no_inflation.budget * rate_factor),
-                    revenue: Math.round(skv_return.data.finance.no_inflation.revenue * rate_factor),
-                    get gross () {
-                        return this.revenue - this.budget;
-                    },
-                };
-  
-                skv_return.data.finance.inc_inflation = inc_inflation;
+            // apply inflation to our existing financials
+            var inc_inflation = {
+                percentage: num_rate_percentage,
+                budget : Math.round(skv_return.data.finance.no_inflation.budget * rate_factor),
+                revenue: Math.round(skv_return.data.finance.no_inflation.revenue * rate_factor),
+                get gross () {
+                    return this.revenue - this.budget;
+                },
+            };
+
+            skv_return.data.finance.inc_inflation = inc_inflation;
 
 
-                // ------- RELEASE DATES------------
-               
-                // get just the release date info from the specified region code
-                var skv_region = arr_regions.filter( (skv_region) => {
-                    return skv_region.iso_3166_1 === skv_cfg.region_code;
-                })[0];
-    
-                // loop through each region and find the correct region based on passed in region code
-                skv_region.release_dates.forEach( (skv_release_date, idx) => {
-    
-                    // for each type of release work out how long ago it was and include formatting
-                    skv_region.release_dates[idx] = applyElapsedTimes(skv_region.release_dates[idx]);
-    
-                });       
-    
-                skv_return.data.region = skv_region;
-                
-                skv_return.success = true;
-                skv_return.msg = 'success';
-    
-                return skv_return;
-            });
+            // ------- RELEASE DATES------------
+            
+            // get just the release date info from the specified region code
+            var skv_region = arr_regions.filter( (skv_region) => {
+                return skv_region.iso_3166_1 === skv_cfg.region_code;
+            })[0];
+
+            // loop through each region and find the correct region based on passed in region code
+            skv_region.release_dates.forEach( (skv_release_date, idx) => {
+
+                // for each type of release work out how long ago it was and include formatting
+                skv_region.release_dates[idx] = applyElapsedTimes(skv_region.release_dates[idx]);
+
+            });       
+
+            skv_return.data.region = skv_region;
+            
+            skv_return.success = true;
+            skv_return.msg = 'success';
+
+            return skv_return;
 
         }).catch( (e) => {
             
