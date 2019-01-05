@@ -56,8 +56,8 @@ var getAll = (cfg, callback) => {
         })
         // handle response from getting movie details
         .then( (response) => {
-
             skv_return.data = response.data;
+
             return people.getPeople({
                                 film_id : skv_return.data.id,
                                 release_dates: skv_return.data.region.release_dates,

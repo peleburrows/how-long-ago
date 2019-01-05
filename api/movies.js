@@ -56,9 +56,9 @@ var getMovie = (skv_cfg) => {
             return axios.get(movie_details_url)
 
         }).then( (response) => {
-
+            
             // store regions to be used later
-            var arr_regions = response.data.release_dates.results;
+            skv_return.data.regions = response.data.release_dates.results;
 
             // -------------- FINANCE WITHOUT INFLATION --------------
             skv_return.data.finance = {
@@ -77,16 +77,26 @@ var getMovie = (skv_cfg) => {
 
         }).then( (response) => {
 
-            // console.log(response.rows);
-            
+            // include in the overall return object
+            // we will add inflation a bit later
+            skv_return.data.finance.no_inflation.ticket_prices = response.rows;
 
-            
+            //get the release year
+            var release_date = skv_return.data.finance.release_date;            
+            var objReleaseDate = new Date(release_date);
+            var release_year = objReleaseDate.getUTCFullYear();
+    
+            // get the index of the ticket prices array that matches 
+            // the year of the film
+            var selected_yr_idx = response.rows.map(x => x.year).indexOf(release_year);
 
+            //attach the release yaer ticket price
+            skv_return.data.finance.no_inflation.ticket_price = Number(response.rows[selected_yr_idx].cost);
 
             // get the inflation rate for US and the selected country
             return finance.getInflationRate({
                 region_code: skv_cfg.region_code,
-                from_date: response.data.release_date
+                from_date: release_date
             });
 
         }).then( (response) => {
@@ -97,6 +107,10 @@ var getMovie = (skv_cfg) => {
             // -------------- US FINANCE WITH INFLATION --------------
             var rate_factor = (num_rate_percentage + 100) / 100;
 
+            var ticket_price = skv_return.data.finance.no_inflation.ticket_price * rate_factor;
+
+
+
             // apply inflation to our existing financials
             var inc_inflation = {
                 percentage: num_rate_percentage,
@@ -105,6 +119,7 @@ var getMovie = (skv_cfg) => {
                 get gross () {
                     return this.revenue - this.budget;
                 },
+                ticket_price : Math.round(ticket_price * 100) / 100
             };
 
             skv_return.data.finance.inc_inflation = inc_inflation;
@@ -113,7 +128,7 @@ var getMovie = (skv_cfg) => {
             // ------- RELEASE DATES------------
 
             // get just the release date info from the specified region code
-            var skv_region = arr_regions.filter( (skv_region) => {
+            var skv_region = skv_return.data.regions.filter( (skv_region) => {
                 return skv_region.iso_3166_1 === skv_cfg.region_code;
             })[0];
 
@@ -225,3 +240,4 @@ applyElapsedTimes = (skv_release_date) => {
 module.exports = {
     getMovie
 };
+

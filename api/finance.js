@@ -6,14 +6,14 @@ const connection_string = 'postgres://tedncwwegrldnk:238805d2643b210ba7f5cd9b169
 
 const client = new Client({
   connectionString: connection_string,
-  ssl: true,
+  ssl: true
 });
 
 // gets the overall percentage of inflation between 2 dates
 var getInflationRate = (skv_cfg) => {
 
     // TODO: need to acknowledge statbureau
-    var api_path = 'https:// www.statbureau.org/calculate-inflation-rate-json';
+    var api_path = 'https://www.statbureau.org/calculate-inflation-rate-json';
 
     // need to convert from xxxx-xx-xx to xxxx/xx/xx
     var start_date = skv_cfg.from_date.replace(/-/g, '/');
@@ -44,37 +44,9 @@ var getTicketPrices = () => {
     var str_query = 'SELECT * FROM ticketprices';
     
     //run the promise
-    return client.query(str_query)
-        .then( (result) => {
-console.log(result.rows);
-            array.forEach(element => {
-                
-            });
+    return client.query(str_query);
 
-
-
-
-        }) 
-        .catch( (e) => {
-
-        });
 };
-
-// if (err) throw err;
-
-// for (let row of res.rows) {
-// //   console.log(JSON.stringify(row));
-// }
-
-// client.end();
-
-
-
-
-
-
-
-
 
 module.exports = {
     getInflationRate,
