@@ -1,9 +1,13 @@
 const axios = require('axios');
 
-// const { Client } = require('pg');
-const connection_string = 'postgres://tedncwwegrldnk:238805d2643b210ba7f5cd9b1690243c0ab7e359f330c2d8a84918c1b2361d74@ec2-46-137-99-175.eu-west-1.compute.amazonaws.com:5432/df6hge0mkgf5aq?ssl=true';
 
+const { Client } = require('pg');
+const connection_string = 'postgres://tedncwwegrldnk:238805d2643b210ba7f5cd9b1690243c0ab7e359f330c2d8a84918c1b2361d74@ec2-46-137-99-175.eu-west-1.compute.amazonaws.com:5432/df6hge0mkgf5aq';
 
+const client = new Client({
+  connectionString: connection_string,
+  ssl: true,
+});
 
 // gets the overall percentage of inflation between 2 dates
 var getInflationRate = (skv_cfg) => {
@@ -31,30 +35,38 @@ var getInflationRate = (skv_cfg) => {
 
 };
 
-var getTicketPrices = (skv_cfg) => {
-console.log('here');
+var getTicketPrices = () => {
+
     // create connection
-    return client.connect(connection_string, function(err, client, done) {
-console.log(err);
-        var str_query = 'SELECT * FROM ticketprices';
+    client.connect();
+    // TODO: error handling
+    // query to use
+    var str_query = 'SELECT * FROM ticketprices';
     
-        client.query(str_query, (err, res) => {
-    console.log('err: ', err);
-    console.log('res: ', res);
-            if (err) throw err;
-    
-            for (let row of res.rows) {
-                console.log(JSON.stringify(row));
-            }
-    
-            client.end();
+    //run the promise
+    return client.query(str_query)
+        .then( (result) => {
+console.log(result.rows);
+            array.forEach(element => {
+                
+            });
+
+
+
+
+        }) 
+        .catch( (e) => {
+
         });
-
-    });
-
-
 };
 
+// if (err) throw err;
+
+// for (let row of res.rows) {
+// //   console.log(JSON.stringify(row));
+// }
+
+// client.end();
 
 
 

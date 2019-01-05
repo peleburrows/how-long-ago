@@ -72,10 +72,16 @@ var getMovie = (skv_cfg) => {
                 // the date that these finance details are based on (probably the US theatrical release date)
                 release_date: response.data.release_date 
             };
-// console.log('here in movies');
-//             return finance.getTicketPrices();
-// return true;
-        // }).then( (response) => {
+
+            return finance.getTicketPrices();
+
+        }).then( (response) => {
+
+            // console.log(response.rows);
+            
+
+            
+
 
             // get the inflation rate for US and the selected country
             return finance.getInflationRate({
@@ -105,7 +111,7 @@ var getMovie = (skv_cfg) => {
 
 
             // ------- RELEASE DATES------------
-            
+
             // get just the release date info from the specified region code
             var skv_region = arr_regions.filter( (skv_region) => {
                 return skv_region.iso_3166_1 === skv_cfg.region_code;

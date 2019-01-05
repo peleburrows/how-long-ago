@@ -5,7 +5,7 @@ const movies = require('./movies.js');
 // get details about cast and crew
 const people = require('./people');
 
-const movie_db_base_path = 'https:// api.themoviedb.org/3';
+const movie_db_base_path = 'https://api.themoviedb.org/3';
 
 const api_cfg = {
     paths : {
