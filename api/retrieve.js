@@ -2,10 +2,10 @@ const axios = require('axios');
 
 const movies = require('./movies.js');
 
-//get details about cast and crew
+// get details about cast and crew
 const people = require('./people');
 
-const movie_db_base_path = 'https://api.themoviedb.org/3';
+const movie_db_base_path = 'https:// api.themoviedb.org/3';
 
 const api_cfg = {
     paths : {
@@ -24,23 +24,23 @@ var skv_img_cfg = {};
  */
 var getAll = (cfg, callback) => {
 
-    //the struct that will eventually be returned from calling this method
+    // the struct that will eventually be returned from calling this method
     var skv_return = {
         success: false,
         msg: 'fail',
         data: {}
     };
 
-    //TODO : need to acknolwdge moviedb
-    //path to call the API to get configuration available for images
+    // TODO : need to acknolwdge moviedb
+    // path to call the API to get configuration available for images
     var movie_db_img_cfg_url = `${api_cfg.paths.base}/configuration?api_key=${api_cfg.key}`;
 
-    //in order to get images we need to get call the movie db api to get configuration values
-    //e.g sizes available, paths to use etc
+    // in order to get images we need to get call the movie db api to get configuration values
+    // e.g sizes available, paths to use etc
     axios.get(movie_db_img_cfg_url)
         .then( (response) => {
 
-            //store the reponse so we have access to it elsewhere in the module
+            // store the reponse so we have access to it elsewhere in the module
             skv_img_cfg = response.data;
 
             var skv_movie_cfg = {
@@ -50,11 +50,11 @@ var getAll = (cfg, callback) => {
                 api_cfg
             };
 
-            //do another call to actually get movie details
+            // do another call to actually get movie details
             return movies.getMovie(skv_movie_cfg);
            
         })
-        //handle response from getting movie details
+        // handle response from getting movie details
         .then( (response) => {
 
             skv_return.data = response.data;
@@ -65,7 +65,7 @@ var getAll = (cfg, callback) => {
                             });
 
         })
-        //deal with response from getting cast
+        // deal with response from getting cast
         .then ( ( response ) => {
 
             if(response.success) {
@@ -101,7 +101,7 @@ var getAll = (cfg, callback) => {
 
 
 
-//expose the function to be used by whatever is importing this module 
+// expose the function to be used by whatever is importing this module 
 module.exports = {
     getAll
 };
