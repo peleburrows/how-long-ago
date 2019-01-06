@@ -71,7 +71,8 @@ var getMovie = (skv_cfg) => {
           return finance.getFinancials(finance_cfg);
 
         }).then((response) => {
-
+console.log('response in movie.js promise: ');
+console.log(response);
           skv_return.data.finance = response;
 
           // ------- RELEASE DATES------------
@@ -100,7 +101,10 @@ var getMovie = (skv_cfg) => {
         })
 
         .catch( (e) => {
-            
+
+            // console.log('fired in movie.js catch: ');
+            // console.log(e);
+
             var err_msg = '';
 
             if(e.message) {
