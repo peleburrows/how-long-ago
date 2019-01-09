@@ -1,15 +1,9 @@
 const axios = require('axios');
 
 //make the errors printed out a bit more legible
-require('pretty-error').start();
+// require('pretty-error').start();
 
 const { Client } = require('pg');
-const connection_string = 'postgres://tedncwwegrldnk:238805d2643b210ba7f5cd9b1690243c0ab7e359f330c2d8a84918c1b2361d74@ec2-46-137-99-175.eu-west-1.compute.amazonaws.com:5432/df6hge0mkgf5aq';
-
-const client = new Client({
-  connectionString: connection_string,
-  ssl: true
-});
 
 /**
  * Get the ticket prices, inflation adjusted values
@@ -80,15 +74,6 @@ var getFinancials = (skv_cfg) => {
 
           return skv_return;
 
-      })
-      .catch( (e) => {
-        console.log('error catched in getFinancials promise');
-        console.log('name: ',e.name);
-        console.log('message: ',e.message);
-        console.log('stack: ',e.stack);
-
-
-        return e;
       });
 
 };
@@ -123,28 +108,30 @@ var getInflationRate = (skv_cfg) => {
 
 var getTicketPrices = () => {
 
-    // create connection
-    client.connect();
-    // TODO: error handling
-    // query to use
-    var str_query = 'blah SELECT * FROM ticketprices';
-    
-    // run the promise
-    return client.query(str_query)
-            .then( (result) => {
-              return result;
-            })
-            .catch( (e) => {
-              // console.log('RECORDED ERROR BY ME');
-              // console.error(e.stack);
-              return e;
-            })
-            .then( (result) => {
-              // we need to close the connection
-              // or it'll error on refresh
-              client.end();
-              return result;
-            })
+
+  const connection_string = 'postgres://tedncwwegrldnk:238805d2643b210ba7f5cd9b1690243c0ab7e359f330c2d8a84918c1b2361d74@ec2-46-137-99-175.eu-west-1.compute.amazonaws.com:5432/df6hge0mkgf5aq';
+
+  // instantiate a new client (clients are cheap to instantiate). clients should be considered 'used up' once they've been disconnected
+  // create a new client to ensure old event handlers don't interfere if we were to reopen the connection
+  const client = new Client({
+    connectionString: connection_string,
+    ssl: true
+  });
+  
+  // create connection
+  client.connect();
+  
+  // query to use
+  var str_query = 'SELECT * FROM ticketprices';
+  
+  // run the promise
+  return client.query(str_query)
+          .then( (result) => {
+            // we need to close the connection
+            // or it'll error on refresh
+            client.end();
+            return result;
+          })
 };
 
 module.exports = {

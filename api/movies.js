@@ -91,36 +91,36 @@ console.log(response);
 
           });       
 
-          skv_return.data.region = skv_region;
+          skv_return.data.selected_region = skv_region;
 
           //we're now ready to return the data back to retrieve.js
           skv_return.success = true;
           skv_return.msg = 'success';
   
           return skv_return;
-        })
-
-        .catch( (e) => {
-
-            // console.log('fired in movie.js catch: ');
-            // console.log(e);
-
-            var err_msg = '';
-
-            if(e.message) {
-                err_msg = e.message;
-            } else {
-                err_msg = 'Not able to connect to api servers';
-            }
-
-            return{
-                success: false,
-                msg: err_msg,
-                stacktrace: e.stack,
-                data: {}
-            };
-    
         });
+
+        // .catch( (e) => {
+
+        //     // console.log('fired in movie.js catch: ');
+        //     // console.log(e);
+
+        //     var err_msg = '';
+
+        //     if(e.message) {
+        //         err_msg = e.message;
+        //     } else {
+        //         err_msg = 'Not able to connect to api servers';
+        //     }
+
+        //     return{
+        //         success: false,
+        //         msg: err_msg,
+        //         stacktrace: e.stack,
+        //         data: {}
+        //     };
+    
+        // });
 
 };
 

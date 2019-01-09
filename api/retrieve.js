@@ -57,10 +57,10 @@ var getAll = (cfg, callback) => {
         // handle response from getting movie details
         .then( (response) => {
             skv_return.data = response.data;
-
+            
             return people.getPeople({
                                 film_id : skv_return.data.id,
-                                release_dates: skv_return.data.region.release_dates,
+                                release_dates: skv_return.data.selected_region.release_dates,
                                 api_cfg : api_cfg
                             });
 
