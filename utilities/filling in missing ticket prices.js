@@ -1,3 +1,4 @@
+/*eslint-disable */
 //utility script to fill in the missing years provided by box office mojo
 
 const arr_years =[ 
@@ -239,3 +240,4 @@ function updateMissingYearValues(arr, start_val, end_val) {
 function findIndex(arr, value) {
     return arr.map(x => x.year).indexOf(value);
 }
+/* eslint-enable */

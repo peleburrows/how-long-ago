@@ -4,9 +4,10 @@
     "env": {
       "browser": true
     },
-    "rules" : {
+    "rules": {
       "prefer-template": "off",
       "camelcase": "off",
-      "max-len" : "warn"
+      "max-len": "warn",
+      "prefer-destructuring": "off"
     }
 }
