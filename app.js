@@ -1,58 +1,53 @@
 const express = require('express');
 // handlebars templating engine
 const hbs = require('hbs');
-
+// to handle joining/concatenating paths
+const path = require('path');
+// module for getting all the data
 const retrieve = require('./api/retrieve');
-
 // process has all our environment variables set as key value pairs
-// heroku will set process.env.PORT otherwise we'll just use 3000 like localhost:3000 
+// heroku will set process.env.PORT otherwise we'll just use 3000 like localhost:3000
 const port = process.env.PORT || 3000;
 
-var app = express();
+const app = express();
 
+// from es lint: "you can’t be sure what type of system the script is running on.
+// Node.js can be run on any computer, including Windows, which uses a different
+// path separator. It’s very easy, therefore, to create an invalid path using
+// string concatenation and assuming Unix-style separators. There’s also the
+// possibility of having double separators, or otherwise ending up with an invalid path."
+const full_partials_path = path.join(__dirname, '/views/partials');
 // for rendering parts of a site
-hbs.registerPartials(__dirname + '/views/partials');
+hbs.registerPartials(full_partials_path);
 
 // tell express to use handlebars as the view engine
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
+  const cfg = {
+    search_terms: 'fight club',
+    region_code: 'IT', // US
+  };
 
-    var cfg = {
-        search_terms: 'fight club',
-        region_code: 'IT' // US
-    };
-
-    // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
-    retrieve.getAll(cfg, (skv_movie) => {
-
-    //  console.log(JSON.stringify(skv_movie, undefined, 2));
-
-        res.send(skv_movie);
-
-        //  TODO: error handling
-        if(!skv_movie.success) {
-            // use a handlebars template page and pass in 
-            // a struct of data
-            //  res.render('error.hbs', skv_movie);            
-        } else {
-
-            // use a handlebars template page and pass in 
-            // a struct of data
-            //  res.render('home.hbs', skv_movie.data);
-        }
-
-
-
-    });
-
-
+  // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
+  retrieve.getAll(cfg, (skv_movie) => {
+  // console.log(JSON.stringify(skv_movie, undefined, 2));
+    res.send(skv_movie);
+    // TODO: error handling
+    if (!skv_movie.success) {
+      // use a handlebars template page and pass in
+      // a struct of data
+      //  res.render('error.hbs', skv_movie);
+    } else {
+      // use a handlebars template page and pass in
+      // a struct of data
+      //  res.render('home.hbs', skv_movie.data);
+    }
+  });
 });
-
-
 
 // which port are we going to listen to requests from
 // do something once the server is up
 app.listen(port, () => {
-    console.log(`Server is up on port ${port}`);
+  console.log(`Server is up on port ${port}`);
 });
