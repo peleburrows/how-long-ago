@@ -82,7 +82,7 @@ ${skv_return.data.id}\
       // attach to the returned json released dates based on region and type
       // of release (theatrical, home etc)
       movie_details_url += '&append_to_response=release_dates';
-      
+
       return axios.get(movie_details_url);
     }).then((response) => {
       // store regions to be used later
@@ -99,13 +99,12 @@ ${skv_return.data.id}\
       return finance.getFinancials(finance_cfg);
     }).then((response) => {
       skv_return.data.finance = response;
-      
+
       // ------- RELEASE DATES------------
-// console.log(' skv_return.data.regions:',  skv_return.data.regions);
+
       // get just the release date info from the specified region code
       const skv_region = skv_return.data.regions.filter(skv_region_to_check => skv_region_to_check.iso_3166_1 === skv_cfg.region_code)[0];
-// console.log('skv_region:', skv_region);
-      
+
       // we won't have a region if the user sent region code doesn't match up with
       // any regions the movie was released in
       if (!skv_region) {
@@ -129,7 +128,7 @@ ${skv_return.data.id}\
     })
     .catch((e) => {
       let err_msg = '';
-// console.log('e:', e);
+
       if (e.message) {
         err_msg = e.message;
       } else {

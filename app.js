@@ -24,11 +24,6 @@ hbs.registerPartials(full_partials_path);
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
-  // const cfg = {
-  //   search_terms: 'fight club',
-  //   region_code: 'US', // IT
-  // };
-
   // default values to be used
   const cfg = {
     search_terms: '',
@@ -50,9 +45,10 @@ app.get('/', (req, res) => {
 
   // a url param needs to be passed in
   if (!cfg.search_terms.length) {
-    return res.send({
+    res.send({
       error: 'You must provide a search term',
     });
+    return;
   }
 
 

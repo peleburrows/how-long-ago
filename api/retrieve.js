@@ -69,7 +69,6 @@ const getAll = (cfg, callback) => {
       callback(skv_return);
     })
     .catch((e) => {
-      console.log('e in retrieve.js:', e);
       let err_msg = '';
       if (e.message) {
         err_msg = e.message;
