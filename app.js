@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 
+const public_directory_path = path.join(__dirname, '/public');
+
 // from es lint: "you can’t be sure what type of system the script is running on.
 // Node.js can be run on any computer, including Windows, which uses a different
 // path separator. It’s very easy, therefore, to create an invalid path using
@@ -20,13 +22,16 @@ const full_partials_path = path.join(__dirname, '/views/partials');
 // for rendering parts of a site
 hbs.registerPartials(full_partials_path);
 
+// Setup static directory to serve
+app.use(express.static(public_directory_path));
+
 // tell express to use handlebars as the view engine
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
   // default values to be used
   const cfg = {
-    search_terms: '',
+    search_terms: 'fight club',
     region_code: 'US', // IT
   };
 
