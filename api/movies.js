@@ -64,12 +64,12 @@ const getMovie = (skv_cfg) => {
         id: res_film.id,
         title: res_film.title,
         img_path: {
-          backdrop: `${skv_img_cfg.images.secure_base_url}
-                     ${skv_img_cfg.images.backdrop_sizes[2]}
-                     ${res_film.backdrop_path}`,
-          poster: `${skv_img_cfg.images.secure_base_url}
-                   ${skv_img_cfg.images.poster_sizes[5]}
-                   ${res_film.poster_path}`,
+          backdrop: `${skv_img_cfg.images.secure_base_url}\
+${skv_img_cfg.images.backdrop_sizes[2]}\
+${res_film.backdrop_path}`,
+          poster: `${skv_img_cfg.images.secure_base_url}\
+${skv_img_cfg.images.poster_sizes[5]}\
+${res_film.poster_path}`,
         },
       };
 
@@ -82,7 +82,7 @@ ${skv_return.data.id}\
       // attach to the returned json released dates based on region and type
       // of release (theatrical, home etc)
       movie_details_url += '&append_to_response=release_dates';
-
+      
       return axios.get(movie_details_url);
     }).then((response) => {
       // store regions to be used later
@@ -99,11 +99,18 @@ ${skv_return.data.id}\
       return finance.getFinancials(finance_cfg);
     }).then((response) => {
       skv_return.data.finance = response;
-
+      
       // ------- RELEASE DATES------------
-
+// console.log(' skv_return.data.regions:',  skv_return.data.regions);
       // get just the release date info from the specified region code
       const skv_region = skv_return.data.regions.filter(skv_region_to_check => skv_region_to_check.iso_3166_1 === skv_cfg.region_code)[0];
+// console.log('skv_region:', skv_region);
+      
+      // we won't have a region if the user sent region code doesn't match up with
+      // any regions the movie was released in
+      if (!skv_region) {
+        throw new Error('Movie not found in the specified region');
+      }
 
       // there may be multiple release dates for different types of releases
       // loop through them here
@@ -122,7 +129,7 @@ ${skv_return.data.id}\
     })
     .catch((e) => {
       let err_msg = '';
-
+// console.log('e:', e);
       if (e.message) {
         err_msg = e.message;
       } else {
@@ -132,7 +139,7 @@ ${skv_return.data.id}\
       return {
         success: false,
         msg: err_msg,
-        stacktrace: e.stack,
+        err_object: e,
         data: {},
       };
     });

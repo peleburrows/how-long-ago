@@ -24,24 +24,53 @@ hbs.registerPartials(full_partials_path);
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
+  // const cfg = {
+  //   search_terms: 'fight club',
+  //   region_code: 'US', // IT
+  // };
+
+  // default values to be used
   const cfg = {
-    search_terms: 'fight club',
+    search_terms: '',
     region_code: 'US', // IT
   };
 
+  // TODO: sort the linting here
+  /* eslint-disable */
+  // loop through the cfg struct of default values
+  for(key in cfg) {
+    // ensure we are only looking at key values from cfg struct
+    // Note that checking .hasOwnProperty(key) may cause an error in some cases:
+    // https://eslint.org/docs/rules/no-prototype-builtins
+    if (Object.prototype.hasOwnProperty.call(req.query, key)) {
+      cfg[key] = req.query[key];
+    }
+  }
+  /* eslint-enable */
+
+  // a url param needs to be passed in
+  if (!cfg.search_terms.length) {
+    return res.send({
+      error: 'You must provide a search term',
+    });
+  }
+
+
   // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
   retrieve.getAll(cfg, (skv_movie) => {
-  // console.log(JSON.stringify(skv_movie, undefined, 2));
-    res.send(skv_movie);
+    // for just getting back data and then return to
+    // stop the rest of the code running
+    // res.send(skv_movie);
+    // return;
     // TODO: error handling
     if (!skv_movie.success) {
       // use a handlebars template page and pass in
       // a struct of data
-      //  res.render('error.hbs', skv_movie);
+      res.render('error.hbs', skv_movie);
     } else {
       // use a handlebars template page and pass in
       // a struct of data
-      //  res.render('home.hbs', skv_movie.data);
+      res.render('home.hbs', skv_movie.data);
     }
   });
 });

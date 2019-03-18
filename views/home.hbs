@@ -10,10 +10,11 @@
     </head>
     <body>
         <h1>{{title}}</h1>
+
         <div>
             <h2>At the box office</h2>
-            <p>{{date.how_long_ago.text}}</p>
-            <p>Released {{date.release_output}}</p>
+            <p>{{selected_region.release_dates.[0].how_long_ago_text}}</p>
+            <p>Released {{selected_region.release_dates.[0].text}}</p>
             <img src="{{img_path.backdrop}}" alt="back drop image" />
             <img src="{{img_path.poster}}" alt="poster image" />
         </div>
@@ -25,4 +26,6 @@
             {{/each}}
         </div>
     </body>
+
+    <script src="../js/fetch.js"></script>
 </html>

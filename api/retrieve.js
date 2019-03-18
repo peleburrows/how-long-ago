@@ -49,6 +49,10 @@ const getAll = (cfg, callback) => {
     .then((response) => {
       skv_return.data = response.data;
 
+      if (!response.success) {
+        throw response.err_object;
+      }
+
       return people.getPeople({
         film_id: skv_return.data.id,
         release_dates: skv_return.data.selected_region.release_dates,
@@ -65,6 +69,7 @@ const getAll = (cfg, callback) => {
       callback(skv_return);
     })
     .catch((e) => {
+      console.log('e in retrieve.js:', e);
       let err_msg = '';
       if (e.message) {
         err_msg = e.message;
