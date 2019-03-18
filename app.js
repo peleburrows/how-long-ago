@@ -28,7 +28,13 @@ app.use(express.static(public_directory_path));
 // tell express to use handlebars as the view engine
 app.set('view engine', 'hbs');
 
-app.get('/', (req, res) => {
+app.get('', (req, res) => {
+  // use a handlebars template page and pass in
+  // a struct of data
+  res.render('index.hbs');
+});
+
+app.get('/movie', (req, res) => {
   // default values to be used
   const cfg = {
     search_terms: 'fight club',
@@ -71,7 +77,7 @@ app.get('/', (req, res) => {
     } else {
       // use a handlebars template page and pass in
       // a struct of data
-      res.render('home.hbs', skv_movie.data);
+      res.render('movie.hbs', skv_movie.data);
     }
   });
 });
