@@ -6,6 +6,11 @@ const dates = require('./dates');
 // for getting inflation for selected country
 const finance = require('./finance');
 
+/**
+ * Description
+ * @param struct skv_release_date  A single release type (theatrical, dvd etc)
+ * @return Length of time thats elapsed wsince release in ms and text
+ */
 const applyElapsedTimes = (skv_release_date) => {
   const local_skv_release_date = skv_release_date;
   // get a human readable releaes date
@@ -26,8 +31,8 @@ const applyElapsedTimes = (skv_release_date) => {
 };
 
 /**
- * Search movie db with search title
- * @param str_search Not encoded search input from the user
+ * Retrieve information on movie based on title and region code
+ * @param struct skv_cfg region code, movie title
  */
 const getMovie = (skv_cfg) => {
   // the struct that will eventually be returned from calling this method
