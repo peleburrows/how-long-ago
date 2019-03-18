@@ -21,8 +21,9 @@
         <div>
             <h2>Cast</h2>
             {{#each people}}
-            <p>{{name}}</p>
-            <p>{{age.now.text}}</p>
+            <h4>{{name}}</h4>
+            <p>Then: {{at_releases.[0].text}}</p>
+            <p>Now: {{age.now.text}}</p>
             {{/each}}
         </div>
     </body>
