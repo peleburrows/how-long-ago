@@ -17,9 +17,9 @@ const getCastExtraDetail = (
   let local_index = index;
 
   // create a path using the id for each cast member
-  const cast_detail_url = `${api_cfg.paths.base}
-                          /person/${arr_cast[local_index].id}
-                          ?api_key=${api_cfg.key}`;
+  const cast_detail_url = `${api_cfg.paths.base}\
+/person/${arr_cast[local_index].id}\
+?api_key=${api_cfg.key}`;
 
   // promised ajax call to get an individual person
   return axios.get(cast_detail_url)
@@ -35,7 +35,7 @@ const getCastExtraDetail = (
           return dates.getFormattedMSoutput(age_ms);
         },
       };
-
+console.log('release_dates:', release_dates);
       const age_at_releases = [];
       // for each release date (premiere, theatrical, dvd etc)
       // find what age they were
@@ -69,10 +69,10 @@ const getCastExtraDetail = (
 const getPeople = (skv_data) => {
   const api_cfg = skv_data.api_cfg;
   // path to get the cast and crew creditted for a film using an id
-  const credits_url = `${api_cfg.paths.base}
-                      /movie/${skv_data.film_id}
-                      /credits
-                      ?api_key=${api_cfg.key}`;
+  const credits_url = `${api_cfg.paths.base}\
+/movie/${skv_data.film_id}\
+/credits\
+?api_key=${api_cfg.key}`;
 
   // do the ajax call with the url
   return axios.get(credits_url)

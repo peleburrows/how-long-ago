@@ -26,7 +26,7 @@ app.set('view engine', 'hbs');
 app.get('/', (req, res) => {
   const cfg = {
     search_terms: 'fight club',
-    region_code: 'IT', // US
+    region_code: 'US', // IT
   };
 
   // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
@@ -49,5 +49,5 @@ app.get('/', (req, res) => {
 // which port are we going to listen to requests from
 // do something once the server is up
 app.listen(port, () => {
-  console.log(`Server is up on port ${port}`);
+  console.log(`Server is up on port ${port}`); // eslint-disable-line
 });

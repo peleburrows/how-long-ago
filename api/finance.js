@@ -24,9 +24,9 @@ const getInflationRate = (skv_cfg) => {
 
   // TODO: need to map region codes and countries like statbureau use
 
-  api_path = `${api_path}?country=united-states
-                         &start=${start_date}
-                         &end=${formatted_now_date}`;
+  api_path = `${api_path}?country=united-states\
+&start=${start_date}\
+&end=${formatted_now_date}`;
 
   return axios.get(api_path);
 };

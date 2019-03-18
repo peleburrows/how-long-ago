@@ -37,9 +37,7 @@ const getFormattedDateOutput = (str_date) => {
  * @param str_date in 'yyyy-dd-mmm' format
  * @return diff_days the number of days difference between 2 dates
 */
-const getDifferenceMSBetween2Dates = (objDate1, objDate2) => {
-  Math.abs(objDate1.getTime() - objDate2.getTime());
-};
+const getDifferenceMSBetween2Dates = (objDate1, objDate2) => Math.abs(objDate1.getTime() - objDate2.getTime());
 
 /**
  * TODO: HANDLE LEAP YEARS
@@ -48,6 +46,9 @@ const getDifferenceMSBetween2Dates = (objDate1, objDate2) => {
  * @return text
  */
 const getFormattedMSoutput = (num_ms) => {
+
+console.log('num_ms:', num_ms);
+
   // one day in milliseconds
   const one_day = 24 * 60 * 60 * 1000;
 

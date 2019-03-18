@@ -6,7 +6,7 @@ const movies = require('./movies.js');
 const people = require('./people');
 
 const movie_db_base_path = 'https://api.themoviedb.org/3';
-console.log('fired in retrieve.js');
+
 const api_cfg = {
   paths: {
     base: movie_db_base_path,

@@ -44,9 +44,9 @@ const getMovie = (skv_cfg) => {
   const str_encoded_search = skv_cfg.search_terms;
 
   // path to call the API to get movie detail
-  const movie_db_url = `${api_cfg.paths.base}/search/movie
-                        ?api_key=${api_cfg.key}
-                        &query=${str_encoded_search}`;
+  const movie_db_url = `${api_cfg.paths.base}/search/movie\
+?api_key=${api_cfg.key}\
+&query=${str_encoded_search}`;
 
   // get the movie details
   return axios.get(movie_db_url)
@@ -69,9 +69,9 @@ const getMovie = (skv_cfg) => {
       };
 
       // now we have the movie id get extra movie details
-      let movie_details_url = `${api_cfg.paths.base}/movie/
-                                 ${skv_return.data.id}
-                                 ?api_key=${api_cfg.key}`;
+      let movie_details_url = `${api_cfg.paths.base}/movie/\
+${skv_return.data.id}\
+?api_key=${api_cfg.key}`;
 
       // themoviedb allows merging responses to reduce api calls
       // attach to the returned json released dates based on region and type
@@ -80,6 +80,7 @@ const getMovie = (skv_cfg) => {
 
       return axios.get(movie_details_url);
     }).then((response) => {
+
       // store regions to be used later
       skv_return.data.regions = response.data.release_dates.results;
 
@@ -87,14 +88,13 @@ const getMovie = (skv_cfg) => {
         budget: response.data.budget,
         revenue: response.data.revenue,
         release_date: response.data.release_date,
-        region_code: response.data.region_code,
+        region_code: skv_cfg.region_code,
       };
 
       // handle things like ticket prices, gross revenue, inflation adjustments
       return finance.getFinancials(finance_cfg);
     }).then((response) => {
-      console.log('response in movie.js promise: ');
-      console.log(response);
+      
       skv_return.data.finance = response;
 
       // ------- RELEASE DATES------------
@@ -116,29 +116,23 @@ const getMovie = (skv_cfg) => {
       skv_return.msg = 'success';
 
       return skv_return;
+    })
+    .catch((e) => {
+      let err_msg = '';
+
+      if (e.message) {
+        err_msg = e.message;
+      } else {
+        err_msg = 'Not able to connect to api servers';
+      }
+
+      return {
+        success: false,
+        msg: err_msg,
+        stacktrace: e.stack,
+        data: {},
+      };
     });
-
-  // .catch( (e) => {
-
-  //     // console.log('fired in movie.js catch: ');
-  //     // console.log(e);
-
-  //     var err_msg = '';
-
-  //     if(e.message) {
-  //         err_msg = e.message;
-  //     } else {
-  //         err_msg = 'Not able to connect to api servers';
-  //     }
-
-  //     return{
-  //         success: false,
-  //         msg: err_msg,
-  //         stacktrace: e.stack,
-  //         data: {}
-  //     };
-
-  // });
 };
 
 // only get the oldest first date for each type of release
