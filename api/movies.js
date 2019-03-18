@@ -80,7 +80,6 @@ ${skv_return.data.id}\
 
       return axios.get(movie_details_url);
     }).then((response) => {
-
       // store regions to be used later
       skv_return.data.regions = response.data.release_dates.results;
 
@@ -94,7 +93,6 @@ ${skv_return.data.id}\
       // handle things like ticket prices, gross revenue, inflation adjustments
       return finance.getFinancials(finance_cfg);
     }).then((response) => {
-      
       skv_return.data.finance = response;
 
       // ------- RELEASE DATES------------

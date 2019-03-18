@@ -35,7 +35,7 @@ const getCastExtraDetail = (
           return dates.getFormattedMSoutput(age_ms);
         },
       };
-console.log('release_dates:', release_dates);
+
       const age_at_releases = [];
       // for each release date (premiere, theatrical, dvd etc)
       // find what age they were
