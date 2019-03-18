@@ -46,9 +46,6 @@ const getDifferenceMSBetween2Dates = (objDate1, objDate2) => Math.abs(objDate1.g
  * @return text
  */
 const getFormattedMSoutput = (num_ms) => {
-
-console.log('num_ms:', num_ms);
-
   // one day in milliseconds
   const one_day = 24 * 60 * 60 * 1000;
 
