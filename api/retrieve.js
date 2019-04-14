@@ -90,14 +90,14 @@ const getFullMovieDetails = (cfg, callback) => {
 
   // TODO: replace search terms with movie id
   const skv_movie_cfg = {
-    search_terms: cfg.search_terms,
+    id: cfg.id,
     region_code: cfg.region_code,
     skv_img_cfg,
     api_cfg,
   };
 
   // do another call to actually get movie details
-  movies.getMovie(skv_movie_cfg)
+  movies.getFullMovieById(skv_movie_cfg)
     // handle response from getting movie details
     .then((response) => {
       skv_return.data = response.data;

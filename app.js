@@ -43,33 +43,6 @@ app.get('/refine-search', (req, res) => {
     region_code: 'US', // IT
   };
 
-
-  // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
-  retrieve.getPossibleMovies(cfg, (rst_movies) => {
-    // for just getting back data and then return to
-    // stop the rest of the code running
-    // res.send(rst_movies);
-    // return;
-    // TODO: error handling
-    if (!rst_movies.success) {
-    //   // use a handlebars template page and pass in
-    //   // a struct of data
-      res.render('error.hbs', rst_movies);
-    } else {
-    //   // use a handlebars template page and pass in
-    //   // a struct of data
-      res.render('refine-search.hbs', rst_movies.data);
-    }
-  });
-});
-
-app.get('/movie', (req, res) => {
-  // default values to be used
-  const cfg = {
-    search_terms: 'fight club',
-    region_code: 'US', // IT
-  };
-
   // TODO: sort the linting here
   /* eslint-disable */
   // loop through the cfg struct of default values
@@ -91,6 +64,46 @@ app.get('/movie', (req, res) => {
     return;
   }
 
+
+  // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
+  retrieve.getPossibleMovies(cfg, (rst_movies) => {
+    // for just getting back data and then return to
+    // stop the rest of the code running
+    // res.send(rst_movies);
+    // return;
+    // TODO: error handling
+    if (!rst_movies.success) {
+    //   // use a handlebars template page and pass in
+    //   // a struct of data
+      res.render('error.hbs', rst_movies);
+    } else {
+    //   // use a handlebars template page and pass in
+    //   // a struct of data
+      res.render('refine-search.hbs', rst_movies.data);
+    }
+  });
+});
+
+app.get('/movie', (req, res) => {
+
+  // default values to be used
+  const cfg = {
+    id: 0,
+    region_code: 'US', // IT
+  };
+
+  // TODO: sort the linting here
+  /* eslint-disable */
+  // loop through the cfg struct of default values
+  for(key in cfg) {
+    // ensure we are only looking at key values from cfg struct
+    // Note that checking .hasOwnProperty(key) may cause an error in some cases:
+    // https://eslint.org/docs/rules/no-prototype-builtins
+    if (Object.prototype.hasOwnProperty.call(req.query, key)) {
+      cfg[key] = req.query[key];
+    }
+  }
+  /* eslint-enable */
 
   // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
   retrieve.getFullMovieDetails(cfg, (skv_movie) => {
