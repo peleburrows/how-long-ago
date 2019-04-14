@@ -5,6 +5,7 @@ const hbs = require('hbs');
 const path = require('path');
 // module for getting all the data
 const retrieve = require('./api/retrieve');
+
 // process has all our environment variables set as key value pairs
 // heroku will set process.env.PORT otherwise we'll just use 3000 like localhost:3000
 const port = process.env.PORT || 3000;
@@ -32,6 +33,34 @@ app.get('', (req, res) => {
   // use a handlebars template page and pass in
   // a struct of data
   res.render('index.hbs');
+});
+
+
+app.get('/refine-search', (req, res) => {
+  // default values to be used
+  const cfg = {
+    search_terms: 'fight club',
+    region_code: 'US', // IT
+  };
+
+
+  // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
+  retrieve.getPossibleMovies(cfg, (rst_movies) => {
+    // for just getting back data and then return to
+    // stop the rest of the code running
+    // res.send(rst_movies);
+    // return;
+    // TODO: error handling
+    if (!rst_movies.success) {
+    //   // use a handlebars template page and pass in
+    //   // a struct of data
+      res.render('error.hbs', rst_movies);
+    } else {
+    //   // use a handlebars template page and pass in
+    //   // a struct of data
+      res.render('refine-search.hbs', rst_movies.data);
+    }
+  });
 });
 
 app.get('/movie', (req, res) => {
@@ -64,7 +93,7 @@ app.get('/movie', (req, res) => {
 
 
   // TODO: PASS IN FROM URL / USER INPUT / CMD LINE
-  retrieve.getAll(cfg, (skv_movie) => {
+  retrieve.getFullMovieDetails(cfg, (skv_movie) => {
     // for just getting back data and then return to
     // stop the rest of the code running
     // res.send(skv_movie);
