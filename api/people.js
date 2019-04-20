@@ -79,7 +79,7 @@ const getPeople = (skv_data) => {
     .then((response) => {
       const arr_cast = response.data.cast;
       // TODO: temporarily restrict length to avoid too many calls to api
-      arr_cast.length = 3;
+      arr_cast.length = 5;
       // start going through the cast members getting further details of them
       return getCastExtraDetail(
         skv_data.release_dates,

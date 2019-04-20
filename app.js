@@ -108,7 +108,7 @@ app.get('/movie', (req, res) => {
   retrieve.getFullMovieDetails(cfg, (skv_movie) => {
     // for just getting back data and then return to
     // stop the rest of the code running
-    // res.send(skv_movie);
+    res.send(skv_movie);
     // return;
     // TODO: error handling
     if (!skv_movie.success) {

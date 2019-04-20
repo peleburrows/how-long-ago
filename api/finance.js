@@ -5,6 +5,21 @@ const axios = require('axios');
 
 const { Client } = require('pg');
 
+const formatCurrency = (num_value, str_region) => {
+
+
+console.log(Intl);
+
+
+  // Create our number formatter.
+  const formatter = new Intl.NumberFormat(str_region, {
+    style: 'currency',
+    currency: 'USD',
+  });
+console.log(formatter);
+  return formatter.format(num_value);
+};
+
 // gets the overall percentage of inflation between 2 dates
 const getInflationRate = (skv_cfg) => {
   // TODO: need to acknowledge statbureau
@@ -68,7 +83,9 @@ const getFinancials = (skv_cfg) => {
   const skv_return = {
     no_inflation: {
       budget: skv_cfg.budget,
+      budget_formatted: formatCurrency(this.budget, 'en-US'),
       revenue: skv_cfg.revenue,
+      revenue_formatted: formatCurrency(this.revenue, 'en-US'),
       get gross() {
         return this.revenue - this.budget;
       },

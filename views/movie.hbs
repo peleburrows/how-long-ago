@@ -26,6 +26,24 @@
             <p>Now: {{age.now.text}}</p>
             {{/each}}
         </div>
+        <div>
+            <h2>Financials</h2>
+            <h4>Budget</h4>
+            <p>Then: ${{finance.no_inflation.budget}}</p>
+            <p>Now: ${{finance.inc_inflation.budget}} (inflation adjusted)</p>
+
+            <h4>Revenue</h4>
+            <p>Then: ${{finance.no_inflation.revenue}}</p>
+            <p>Now: ${{finance.inc_inflation.revenue}} (inflation adjusted)</p>
+
+            <h4>Gross</h4>
+            <p>Then: ${{finance.no_inflation.gross}}</p>
+            <p>Now: ${{finance.inc_inflation.gross}} (inflation adjusted)</p>
+
+            <h4>Ticket price</h4>
+            <p>Then: ${{finance.no_inflation.ticket_price}}</p>
+            <p>Now: ${{finance.inc_inflation.ticket_price}} (inflation adjusted)</p>
+        </div>
     </body>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
