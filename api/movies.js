@@ -36,11 +36,11 @@ const applyElapsedTimes = (skv_release_date) => {
  */
 const getMovies = (skv_cfg) => {
   // the struct that will eventually be returned from calling this method
-  const skv_return = {
-    success: false,
-    msg: 'fail',
-    data: {},
-  };
+  // const skv_return = {
+  //   success: false,
+  //   msg: 'fail',
+  //   data: {},
+  // };
 
   const api_cfg = skv_cfg.api_cfg;
   const skv_img_cfg = skv_cfg.skv_img_cfg;
@@ -57,16 +57,13 @@ const getMovies = (skv_cfg) => {
   return axios.get(movie_db_url)
     // handle response from getting movie details
     .then((response) => {
-
       const skv_return = {
         success: false,
         msg: 'fail',
         data: [],
       };
 
-
       const arr_films = response.data.results;
-
       const cnt_films = arr_films.length;
 
       for (let i = 0; i < cnt_films; i += 1) {
@@ -75,32 +72,15 @@ const getMovies = (skv_cfg) => {
         skv_film.full_poster_path = `${skv_img_cfg.images.secure_base_url}\
 ${skv_img_cfg.images.poster_sizes[1]}\
 ${skv_film.poster_path}`;
-
       }
-
-//       skv_return.data = {
-//         id: res_film.id,
-//         title: res_film.title,
-//         img_path: {
-//           backdrop: `${skv_img_cfg.images.secure_base_url}\
-// ${skv_img_cfg.images.backdrop_sizes[2]}\
-// ${res_film.backdrop_path}`,
-//           poster: `${skv_img_cfg.images.secure_base_url}\
-// ${skv_img_cfg.images.poster_sizes[5]}\
-// ${res_film.poster_path}`,
-//         },
-//       };
-
 
       skv_return.success = true;
       skv_return.msg = 'success';
       skv_return.data = arr_films;
 
       return skv_return;
-
-    })
-
-  };
+    });
+};
 
 /**
  * Retrieve full information on movie based id
@@ -114,30 +94,12 @@ const getFullMovieById = (skv_cfg) => {
     data: {},
   };
 
-  skv_return.data = {
-    id: skv_cfg.id,
-  };
-
   const api_cfg = skv_cfg.api_cfg;
   const skv_img_cfg = skv_cfg.skv_img_cfg;
 
-  // struct of values that will be returned
-//   skv_return.data = {
-//     id: res_film.id,
-//     title: res_film.title,
-//     img_path: {
-//       backdrop: `${skv_img_cfg.images.secure_base_url}\
-// ${skv_img_cfg.images.backdrop_sizes[2]}\
-// ${res_film.backdrop_path}`,
-//       poster: `${skv_img_cfg.images.secure_base_url}\
-// ${skv_img_cfg.images.poster_sizes[5]}\
-// ${res_film.poster_path}`,
-//     },
-//   };
-
   // now we have the movie id get extra movie details
   let movie_details_url = `${api_cfg.paths.base}/movie/\
-${skv_return.data.id}\
+${skv_cfg.id}\
 ?api_key=${api_cfg.key}`;
   // themoviedb allows merging responses to reduce api calls
   // attach to the returned json released dates based on region and type
@@ -146,19 +108,19 @@ ${skv_return.data.id}\
 
   return axios.get(movie_details_url)
     .then((response) => {
-console.log(skv_img_cfg);
       // handle image paths
-//       skv_return.data = {
-//         title: response.title,
-//         img_path: {
-//           backdrop: `${skv_img_cfg.images.secure_base_url}\
-// ${skv_img_cfg.images.backdrop_sizes[2]}\
-// ${response.backdrop_path}`,
-//           poster: `${skv_img_cfg.images.secure_base_url}\
-// ${skv_img_cfg.images.poster_sizes[5]}\
-// ${response.poster_path}`,
-//         },
-//       };
+      skv_return.data = {
+        id: skv_cfg.id,
+        title: response.data.title,
+        img_path: {
+          backdrop: `${skv_img_cfg.images.secure_base_url}\
+${skv_img_cfg.images.backdrop_sizes[2]}\
+${response.data.backdrop_path}`,
+          poster: `${skv_img_cfg.images.secure_base_url}\
+${skv_img_cfg.images.poster_sizes[5]}\
+${response.data.poster_path}`,
+        },
+      };
 
       // store regions to be used later
       skv_return.data.regions = response.data.release_dates.results;
@@ -190,6 +152,7 @@ console.log(skv_img_cfg);
       // we're now ready to return the data back to retrieve.js
       skv_return.success = true;
       skv_return.msg = 'success';
+
       return skv_return;
     })
     .catch((e) => {
@@ -207,14 +170,6 @@ console.log(skv_img_cfg);
       };
     });
 };
-
-
-
-
-
-
-
-
 
 // only get the oldest first date for each type of release
 // const getFirstReleaseOfType = (skv_region) => {

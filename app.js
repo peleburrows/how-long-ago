@@ -85,7 +85,6 @@ app.get('/refine-search', (req, res) => {
 });
 
 app.get('/movie', (req, res) => {
-
   // default values to be used
   const cfg = {
     id: 0,
